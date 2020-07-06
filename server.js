@@ -43,16 +43,16 @@ function MyWeather(a,day,daynum,month,year){
 MyWeather.all=[];
 
 
-app.get('/location',(req,resp)=>{
+app.get('/location',(req,res)=>{
     
     const city=req.query.city;
     const myLocation=require('./data/location.json');
     const myWeather=require('./data/weather.json');
     let theLocation=new Location(city,myLocation);
     
-    resp.send(theLocation);
+    res.send(theLocation);
 })
-app.get('/weather',(req,resp)=>{
+app.get('/weather',(req,res)=>{
     
     const city=req.query.city;
  
@@ -80,15 +80,27 @@ let year=getMonthandYear(item)[1];
 
         let theWeather=new MyWeather(item,day,daynum,month,year);
     })
-    resp.send(MyWeather.all);
-    // resp.send(theLocation);
+    res.send(MyWeather.all);
+    // res.send(theLocation);
 })
+// var err=[{
+//     status: 500,
+//     resonseText: "Sorry, something went wrong",
+   
+//   }];
 
-
-app.use((error, req, responce)=>{
-    responce.status(500).send(error);
+app.get('*', (req, res) => {
+    res.status(404).send('Not Found');
 });
 
+// app.use(error,( req, res) => {
+//     res.status(500).send(error);
+// });
+
+// app.get('*', (req, res) => {
+//     let error = 'Sorry something went Wrong';
+//     res.status(404).send('error', { 'message': error });
+// });
 
 
 app.listen(PORT,()=>{
